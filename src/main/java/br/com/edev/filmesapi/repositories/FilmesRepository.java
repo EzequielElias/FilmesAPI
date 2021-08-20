@@ -4,17 +4,12 @@ import br.com.edev.filmesapi.entities.Filmes;
 import br.com.edev.filmesapi.exceptions.FilmeInexistenteException;
 import br.com.edev.filmesapi.exceptions.FilmeJaExistenteException;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FilmesRepository {
 
-    private final List<Filmes> filmes;
-    private FilmesRepository() {
-        this.filmes = new ArrayList<>();
-    }
+    private final HashSet<Filmes> filmes = new LinkedHashSet<>();
     private static FilmesRepository filmesRepository;
 
 
@@ -25,13 +20,13 @@ public class FilmesRepository {
         return filmesRepository;
     }
 
-    public List<Filmes> encontrarFilme() {
+    public HashSet<Filmes>  encontrarFilme() {
         return filmes;
     }
 
-   public List<Filmes> encontrarFilmeNome(final String nome) {
+   public HashSet<Filmes> encontrarFilmeNome(final String nome) {
 
-        List<Filmes> filmesEncontrados = new ArrayList<>(filmes.stream().filter(flm -> flm.getNomeFilme().contains(nome)).collect(Collectors.toList()));
+        HashSet<Filmes> filmesEncontrados = new HashSet<>(filmes.stream().filter(flm -> flm.getNomeFilme().contains(nome)).collect(Collectors.toList()));
 
         if(filmesEncontrados.isEmpty()) {
             throw new FilmeInexistenteException();
@@ -39,9 +34,9 @@ public class FilmesRepository {
             return filmesEncontrados;
     }
 
-   public List<Filmes> encontrarFilmeDiretor(final String diretor) {
+   public HashSet<Filmes> encontrarFilmeDiretor(final String diretor) {
 
-        List<Filmes> filmesEncontrados = new ArrayList<>(filmes.stream().filter(flm -> flm.getNomeDiretor().contains(diretor)).collect(Collectors.toList()));
+        HashSet<Filmes> filmesEncontrados = new HashSet<>(filmes.stream().filter(flm -> flm.getNomeDiretor().contains(diretor)).collect(Collectors.toList()));
 
         if(filmesEncontrados.isEmpty()){
             throw new FilmeInexistenteException();
@@ -49,8 +44,8 @@ public class FilmesRepository {
             return filmesEncontrados;
    }
 
-   public List<Filmes> encontrarFilmeDataLancamento(final Date data) {
-        List<Filmes> filmesEncontrados = new ArrayList<>(filmes.stream().filter(flm -> flm.getDataLancamento().equals(data)).collect(Collectors.toList()));
+   public HashSet<Filmes> encontrarFilmeDataLancamento(final String data) {
+        HashSet<Filmes> filmesEncontrados = new HashSet<>(filmes.stream().filter(flm -> flm.getDataLancamento().equals(data)).collect(Collectors.toList()));
 
         if(filmesEncontrados.isEmpty()) {
             throw new FilmeInexistenteException();

@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @RestController
@@ -19,7 +21,7 @@ public class FilmesController {
     private IFilmesService filmesService;
 
     @GetMapping
-    public List<Filmes> encontrarFilmes(@RequestParam(required = false) String nome, String diretor, Date data) {
+    public HashSet<Filmes> encontrarFilmes(@RequestParam(required = false) String nome, String diretor, String data) {
 
         if(nome != null) {
             return filmesService.encontrarFilmesNome(nome);

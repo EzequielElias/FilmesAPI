@@ -4,30 +4,19 @@ import br.com.edev.filmesapi.entities.Filmes;
 import br.com.edev.filmesapi.exceptions.FilmeJaExistenteException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Component
 public class AutenticadorData implements Autenticador {
 
-    private List<Filmes> filmes;
-
-    public AutenticadorData() {
-        this.filmes = new ArrayList<>();
-    }
+    private static HashSet<Filmes> filmes = new HashSet<>();
 
     @Override
-    public void autentica(Filmes filmes) {
+    public void autentica(String nome, String diretor, String data) {
 
-            if (!filmes.getDataLancamento().equals("")) {
-                for (Filmes filme : this.filmes) {
+        boolean autenticador = false;
+        autenticador = filmes.stream().anyMatch(flm -> flm.getDataLancamento().equalsIgnoreCase(data));
 
-                    if (filme.getDataLancamento().contains(filmes.getDataLancamento())) {
-                        throw new FilmeJaExistenteException();
-                    }
-                }
-            }
+        if (autenticador = true) throw new FilmeJaExistenteException();
         }
 }

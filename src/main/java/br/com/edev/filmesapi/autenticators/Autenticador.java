@@ -5,6 +5,6 @@ import br.com.edev.filmesapi.entities.Filmes;
 
 public interface Autenticador {
 
-    void autentica(Filmes filmes);
+    void autentica(String nome, String diretor, String data);
 
 }

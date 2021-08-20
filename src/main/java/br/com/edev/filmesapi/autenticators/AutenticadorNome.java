@@ -2,32 +2,22 @@ package br.com.edev.filmesapi.autenticators;
 
 import br.com.edev.filmesapi.entities.Filmes;
 import br.com.edev.filmesapi.exceptions.FilmeJaExistenteException;
-import br.com.edev.filmesapi.repositories.FilmesRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 @Component
 public class AutenticadorNome implements Autenticador{
 
-    private List<Filmes> filmes;
-
-    public AutenticadorNome() {
-        this.filmes = new ArrayList<>();
-    }
+    private static HashSet<Filmes> filmes = new LinkedHashSet();
 
     @Override
-    public void autentica(Filmes filmes) {
+    public void autentica(String nome, String diretor, String data) {
 
-        if (!filmes.getNomeFilme().equals("")) {
-            for (Filmes filme : this.filmes) {
+        boolean autenticador = false;
+        autenticador = filmes.stream().anyMatch(f -> f.getNomeFilme().equalsIgnoreCase(nome));
+        if (autenticador = true) throw new FilmeJaExistenteException();
 
-                if (filme.getNomeFilme().contains(filmes.getNomeFilme())) {
-                    throw new FilmeJaExistenteException();
-                }
-            }
-        }
     }
 }
