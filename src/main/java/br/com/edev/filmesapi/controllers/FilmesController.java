@@ -1,43 +1,41 @@
 package br.com.edev.filmesapi.controllers;
 
 import br.com.edev.filmesapi.entities.Filmes;
-import br.com.edev.filmesapi.exceptions.NotaInvalidaException;
 import br.com.edev.filmesapi.services.IFilmesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/filmesapi")
 public class FilmesController {
 
+    private final List<Filmes> filmesList;
+
     @Autowired
-    private IFilmesService filmesService;
+    private final IFilmesService filmesService;
+
+    public FilmesController(IFilmesService filmesService) {
+        this.filmesService = filmesService;
+        this.filmesList = new ArrayList<>();
+    }
 
     @GetMapping
-    public HashSet<Filmes> encontrarFilmes(@RequestParam(required = false) String nome, String diretor, String data) {
-
+    public List<Filmes> encontrarFilmes(@RequestParam(required = false) String nome, String diretor) {
         if(nome != null) {
             return filmesService.encontrarFilmesNome(nome);
         } else if (diretor != null) {
             return filmesService.encontrarFilmesDiretor(diretor);
-        } else if (data != null) {
-            return filmesService.encontrarFilmesData(data);
         }
-        return filmesService.encontrarFilme();
+        return filmesService.encontrarFilmes();
         }
 
     @PostMapping
     public ResponseEntity<String> cadastrarFilme(@RequestBody final Filmes filmes) {
-        if(filmes.getNotaFilme() < 1 || filmes.getNotaFilme() > 5) {
-            throw new NotaInvalidaException();
-        }
         filmesService.cadastrarFilme(filmes);
         final String criadoComSucesso = "Filme criado com sucesso!";
         return new ResponseEntity<String>(criadoComSucesso, HttpStatus.CREATED);

@@ -3,49 +3,29 @@ package br.com.edev.filmesapi.repositories;
 import br.com.edev.filmesapi.entities.Filmes;
 import br.com.edev.filmesapi.exceptions.FilmeInexistenteException;
 import br.com.edev.filmesapi.exceptions.FilmeJaExistenteException;
+import br.com.edev.filmesapi.exceptions.NotaInvalidaException;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
+@Repository
 public class FilmesRepository {
 
-    private final HashSet<Filmes> filmes = new LinkedHashSet<>();
-    private static FilmesRepository filmesRepository;
+    private final List<Filmes> filmesList;
 
-
-    public static FilmesRepository getInstance() {
-        if(filmesRepository == null) {
-            filmesRepository = new FilmesRepository();
-        }
-        return filmesRepository;
+    private FilmesRepository() {
+        this.filmesList = new ArrayList<>();
     }
 
-    public HashSet<Filmes>  encontrarFilme() {
-        return filmes;
+    public List<Filmes>  encontrarFilmes() {
+        return filmesList;
     }
 
-   public HashSet<Filmes> encontrarFilmeNome(final String nome) {
+    public List<Filmes> encontrarFilmesNome(final String nome) {
 
-        HashSet<Filmes> filmesEncontrados = new HashSet<>(filmes.stream().filter(flm -> flm.getNomeFilme().contains(nome)).collect(Collectors.toList()));
-
-        if(filmesEncontrados.isEmpty()) {
-            throw new FilmeInexistenteException();
-        }
-            return filmesEncontrados;
-    }
-
-   public HashSet<Filmes> encontrarFilmeDiretor(final String diretor) {
-
-        HashSet<Filmes> filmesEncontrados = new HashSet<>(filmes.stream().filter(flm -> flm.getNomeDiretor().contains(diretor)).collect(Collectors.toList()));
-
-        if(filmesEncontrados.isEmpty()){
-            throw new FilmeInexistenteException();
-        }
-            return filmesEncontrados;
-   }
-
-   public HashSet<Filmes> encontrarFilmeDataLancamento(final String data) {
-        HashSet<Filmes> filmesEncontrados = new HashSet<>(filmes.stream().filter(flm -> flm.getDataLancamento().equals(data)).collect(Collectors.toList()));
+        List<Filmes> filmesEncontrados = new ArrayList<>(filmesList.stream().filter(flm -> flm.getNome().contains(nome)).collect(Collectors.toList()));
 
         if(filmesEncontrados.isEmpty()) {
             throw new FilmeInexistenteException();
@@ -53,36 +33,51 @@ public class FilmesRepository {
         return filmesEncontrados;
     }
 
-    public Filmes cadastrarFilme(Filmes filmes) {
+    public List<Filmes> encontrarFilmesDiretor(final String diretor) {
 
-        if(filmes.getIdFilme() ==  null) {
-            filmes.setIdFilme(count() + 1);
+        List<Filmes> filmesEncontrados = new ArrayList<>(filmesList.stream().filter(flm -> flm.getDiretor().contains(diretor)).collect(Collectors.toList()));
+
+        if(filmesEncontrados.isEmpty()){
+            throw new FilmeInexistenteException();
         }
-        this.filmes.add(filmes);
-        return null;
+        return filmesEncontrados;
     }
 
-    public void editarFilme(final Filmes filmes) {
+    public Filmes cadastrarFilme(Filmes filmes){
 
-        this.filmes.stream().filter(flm -> flm.getIdFilme().equals(filmes.getIdFilme()))
-                            .forEach(flm -> flm.setNomeFilme(filmes.getNomeFilme()));
+        if(filmesList.stream().anyMatch(flm -> flm.getNome().equalsIgnoreCase(filmes.getNome())) &&
+                filmesList.stream().anyMatch(flm1 -> flm1.getDiretor().equalsIgnoreCase(filmes.getDiretor())) &&
+                    filmesList.stream().anyMatch(flm2 -> flm2.getAno().equalsIgnoreCase(filmes.getAno()))) {
 
-        this.filmes.stream().filter(flm -> flm.getIdFilme().equals(filmes.getIdFilme()))
-                            .forEach(flm -> flm.setNomeDiretor(filmes.getNomeDiretor()));
+                        throw new FilmeJaExistenteException();
+        }
+        if(filmes.getId() == null) {
+            filmes.setId(filmesList.size() + 1);
+        }
+        if(filmes.getNota() < 1 || filmes.getNota() > 5) {
+            throw new NotaInvalidaException();
+        }
 
-        this.filmes.stream().filter(flm -> flm.getIdFilme().equals(filmes.getIdFilme()))
-                            .forEach(flm -> flm.setDataLancamento(filmes.getDataLancamento()));
+            this.filmesList.add(filmes);
+            return filmes;
+    }
 
-        this.filmes.stream().filter((flm -> flm.getIdFilme().equals(filmes.getIdFilme())))
-                            .forEach(flm -> flm.setNotaFilme(filmes.getNotaFilme()));
+    public void editarFilme(final Filmes filmes){
+
+            filmesList.stream().filter(flm -> flm.getId().equals(filmes.getId()))
+                    .forEach(flm -> flm.setNome(filmes.getNome()));
+
+            filmesList.stream().filter(flm -> flm.getId().equals(filmes.getId()))
+                    .forEach(flm -> flm.setDiretor(filmes.getDiretor()));
+
+            filmesList.stream().filter(flm -> flm.getId().equals(filmes.getId()))
+                    .forEach(flm -> flm.setAno(filmes.getAno()));
+
+            filmesList.stream().filter((flm -> flm.getId().equals(filmes.getId())))
+                    .forEach(flm -> flm.setNota(filmes.getNota()));
     }
 
     public void deletarFilme(Integer id) {
-        this.filmes.removeIf(flm -> flm.getIdFilme().equals(id));
-    }
-
-    public Integer count() {
-        return filmes.size();
-    }
-
+            filmesList.removeIf(filmes -> filmes.getId().equals(id));
+        }
 }

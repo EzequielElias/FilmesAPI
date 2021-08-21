@@ -44,4 +44,5 @@ public class GenericControllerAdvice {
         LOGGER.error(notaInvalida);
         return new ResponseEntity<>(notaInvalida, HttpStatus.CONFLICT);
     }
+
 }

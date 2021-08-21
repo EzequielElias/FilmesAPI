@@ -1,59 +1,59 @@
 package br.com.edev.filmesapi.entities;
 
+
 public class Filmes {
 
-private String nomeFilme;
-private Integer idFilme;
-private String nomeDiretor;
-private String dataLancamento;
-private Integer notaFilme;
+    private Integer id;
+    private String nome;
+    private String diretor;
+    private String ano;
+    private Integer nota;
 
-    public String getNomeFilme() {
-        return nomeFilme;
+    public Filmes(Integer id, String nome, String diretor, String ano, Integer nota) {
+        this.id = id;
+        this.nome = nome;
+        this.diretor = diretor;
+        this.ano = ano;
+        this.nota = nota;
     }
 
-    public void setNomeFilme(String nomeFilme) {
-        this.nomeFilme = nomeFilme;
+    public Integer getId() {
+        return id;
     }
 
-    public Integer getIdFilme() {
-        return idFilme;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setIdFilme(Integer idFilme) {
-        this.idFilme = idFilme;
+    public String getNome() {
+        return nome;
     }
 
-    public String getNomeDiretor() {
-        return nomeDiretor;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public void setNomeDiretor(String nomeDiretor) {
-        this.nomeDiretor = nomeDiretor;
+    public String getDiretor() {
+        return diretor;
     }
 
-    public String getDataLancamento() {
-        return dataLancamento;
+    public void setDiretor(String diretor) {
+        this.diretor = diretor;
     }
 
-    public void setDataLancamento(String dataLancamento) {
-        this.dataLancamento = dataLancamento;
+    public String getAno() {
+        return ano;
     }
 
-    public Filmes(String nomeFilme, Integer idFilme, String nomeDiretor, String dataLancamento, Integer notaFilme) {
-        this.nomeFilme = nomeFilme;
-        this.idFilme = idFilme;
-        this.nomeDiretor = nomeDiretor;
-        this.dataLancamento = dataLancamento;
-        this.notaFilme = notaFilme;
+    public void setAno(String ano) {
+        this.ano = ano;
     }
 
-    public Integer getNotaFilme() {
-        return notaFilme;
+    public Integer getNota() {
+        return nota;
     }
 
-    public void setNotaFilme(Integer notaFilme) {
-        this.notaFilme = notaFilme;
+    public void setNota(Integer nota) {
+        this.nota = nota;
     }
-
 }
